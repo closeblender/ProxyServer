@@ -18,7 +18,7 @@ public class ProxyServer {
         try { // Try to get args
             port = Integer.parseInt(args[0]);
         } catch (Exception e) {
-
+            //use default
         }
 
         try {

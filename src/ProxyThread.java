@@ -10,6 +10,7 @@ public class ProxyThread extends Thread{
 
     private Socket socket = null;
     private SocketAddress clientAddress = null;
+    private Socket serverSocket = null;
 
     public ProxyThread(Socket socket, SocketAddress address) {
         super("ProxyThread");
@@ -36,13 +37,13 @@ public class ProxyThread extends Thread{
                 int length = inFromClient.read(data, 0, data.length);
                 if(length != -1) {
                     buffer.write(data, 0, length);
+                    buffer.flush();
                 }
                 if(length == -1 || inFromClient.available() == 0) {
                     dataOver = true;
                 }
             }
 
-            buffer.flush();
             byte[] requestFromClient = buffer.toByteArray();
             String requestFromClientString = new String(requestFromClient);
             System.out.println("Request Data From Client: " + requestFromClientString);
@@ -78,7 +79,7 @@ public class ProxyThread extends Thread{
                 String ipAddress = address.getHostAddress();
                 System.out.println("IP Address: " + ipAddress);
 
-                Socket serverSocket = new Socket(address,80);
+                serverSocket = new Socket(address,80);
 
                 OutputStream outToServer = serverSocket.getOutputStream();
                 InputStream inFromServer = serverSocket.getInputStream();
@@ -108,6 +109,14 @@ public class ProxyThread extends Thread{
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
             e.printStackTrace();
+            try {
+                socket.close();
+                serverSocket.close();
+            } catch (IOException exception) {
+                System.out.println("Exception: " + exception.getMessage());
+                exception.printStackTrace();
+            }
+
         }
     }
 
