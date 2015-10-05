@@ -77,6 +77,11 @@ public class ProxyThread extends Thread{
                     System.out.println("Use Cache!");
                     outToClient.write(getCache(request));
                     outToClient.flush();
+
+                    while(!ProxyServer.logRequest(clientAddress.toString(), request.url, getCache(request).length)) {
+                        Thread.sleep(10);
+                    }
+
                 } else {
 
                     // Create socket to server
@@ -98,14 +103,18 @@ public class ProxyThread extends Thread{
                     int bytes_read;
                     while ((bytes_read = inFromServer.read(dataFrom)) != -1) {
                         System.out.println("Return Data From Server: " + bytes_read);
-                        System.out.println("Return String From Server: " + new String(dataFrom));
                         outToClient.write(dataFrom, 0, bytes_read);
                         outToClient.flush();
                         returnDataFromServer.write(dataFrom, 0, bytes_read);
                     }
 
                     returnDataFromServer.flush();
-                    cacheData(returnDataFromServer.toByteArray(), request);
+                    byte[] cacheData = returnDataFromServer.toByteArray();
+                    cacheData(cacheData, request);
+
+                    while(!ProxyServer.logRequest(clientAddress.toString(), request.url, cacheData.length)) {
+                        Thread.sleep(10);
+                    }
 
                     System.out.println("Closing Server Socket");
                     serverSocket.close();

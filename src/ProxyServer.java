@@ -13,6 +13,7 @@ public class ProxyServer {
     static HashMap<String, CachedData> cache;
     static boolean cacheLock = false;
     static long CACHE_SEC_LIMIT = 60000;
+    static boolean logLock = false;
 
     public static void main(String[] args) throws IOException {
 
@@ -89,6 +90,36 @@ public class ProxyServer {
         ObjectOutputStream s = new ObjectOutputStream(f);
         s.writeObject(cache);
         s.close();
+        return true;
+    }
+
+    public static boolean logRequest(String browserIP, String url, int size) throws IOException, ClassNotFoundException {
+        if(logLock) {
+            return false;
+        }
+        System.out.println("Logging!");
+        logLock = true;
+        //Date: browserIP URL size
+        String log = "";
+        File file = new File("proxy.log");
+        if(file.exists()) {
+            System.out.println("Loaded Log!");
+            FileInputStream f = new FileInputStream(file);
+            ObjectInputStream s = new ObjectInputStream(f);
+            String c = (String) s.readObject();
+            s.close();
+            log = c;
+        }
+        String newLog = "\n" + new Date().toGMTString() + ": " + browserIP + " " + url + " " + size;
+        System.out.println("Log: " + newLog);
+        log += newLog;
+
+        FileOutputStream f = new FileOutputStream(file);
+        ObjectOutputStream s = new ObjectOutputStream(f);
+        s.writeObject(log);
+        s.close();
+
+        logLock = false;
         return true;
     }
 
