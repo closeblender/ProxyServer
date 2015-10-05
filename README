@@ -1,0 +1,13 @@
+**********   Read Me File    *********
+CSCI 415 Assignment 2
+Chad Close
+Trevor Priestley
+Carlin Mische
+Erin Gulbranson
+
+1. Run the ProxyServer.java Main() function.
+2. Telnet to the localhost 9090 (We run the proxy on port 9090)
+3. Run GET requests Examples Below:
+
+GET http://www.something.com HTTP/1.0
+GET http://www.cs.ndsu.nodak.edu/aboutus.htm HTTP/1.0
