@@ -1,7 +1,5 @@
 import java.io.*;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.net.*;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -64,7 +62,9 @@ public class ProxyThread extends Thread{
                         request.setURL(tok.nextToken());
                         System.out.println("Found GET");
                     } else {
-                        request.setHeaders(token, tok.nextToken());
+                        if(tok.hasMoreTokens()) {
+                            request.setHeaders(token, tok.nextToken());
+                        }
                     }
                 }
 
@@ -85,26 +85,15 @@ public class ProxyThread extends Thread{
 
                 outToServer.write(requestFromClient);
 
-
-                ByteArrayOutputStream bufferFromServer = new ByteArrayOutputStream();
                 byte[] dataFrom = new byte[1024];
-                boolean dataFromOver = false;
-                while(!dataFromOver) {
-                    int length = inFromServer.read(dataFrom, 0, dataFrom.length);
-                    if(length != -1) {
-                        bufferFromServer.write(dataFrom, 0, length);
-                    }
-                    if(length == -1 || inFromServer.available() == 0) {
-                        dataFromOver = true;
-                    }
+                int bytes_read;
+                while ((bytes_read = inFromServer.read(dataFrom)) != -1) {
+                    System.out.println("Return Data From Server: " + bytes_read);
+                    outToClient.write(dataFrom, 0, bytes_read);
+                    outToClient.flush();
                 }
 
-                bufferFromServer.flush();
-                byte[] returnFromServer = bufferFromServer.toByteArray();
-                System.out.println("Return Data From Server: " + returnFromServer.length);
-                System.out.println("Return String From Server: " + new String(returnFromServer));
-
-                outToClient.write(returnFromServer);
+                serverSocket.close();
 
             }
 
@@ -123,7 +112,7 @@ public class ProxyThread extends Thread{
 
     public class Request {
 
-        public String URL;
+        public String url;
         public HashMap<String, String> headers = new HashMap<>();
 
         public Request() {
@@ -131,19 +120,19 @@ public class ProxyThread extends Thread{
         }
 
         public void setURL(String url) {
-            URL = url;
+            this.url = url;
         }
 
         public boolean isValidRequest() {
-            return URL != null;
+            return url != null;
         }
 
         public void setHeaders(String key, String data) {
             headers.put(key, data);
         }
 
-        public String getURL() {
-            return headers.get("Host:");
+        public String getURL() throws MalformedURLException {
+            return new URL(url).getHost();
         }
     }
 
