@@ -114,36 +114,33 @@ public class ProxyThread extends Thread{
 
                     returnDataFromServer.flush();
                     byte[] cacheData = returnDataFromServer.toByteArray();
-                    cacheData(cacheData, request);
+                    cacheData(cacheData, request);  // Cache data
 
+                    // Log request
                     while(!ProxyServer.logRequest(clientAddress.toString(), request.url, cacheData.length)) {
                         Thread.sleep(10);
                     }
 
-                    System.out.println("Closing Server Socket");
-                    serverSocket.close();
                 }
 
             }
 
-
-            System.out.println("Closing Socket");
-            if (socket != null) {
-                socket.close();
-            }
-
-
         } catch (Exception e) {
             System.out.println("Exception Here: " + e.getMessage());
             e.printStackTrace();
+        } finally {
             try {
-                socket.close();
-                serverSocket.close();
+                System.out.println("Closing Sockets");
+                if(socket != null) {
+                    socket.close();
+                }
+                if(serverSocket != null) {
+                    serverSocket.close();
+                }
             } catch (IOException exception) {
                 System.out.println("Exception: " + exception.getMessage());
                 exception.printStackTrace();
             }
-
         }
     }
 
