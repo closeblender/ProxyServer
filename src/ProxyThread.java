@@ -163,7 +163,6 @@ public class ProxyThread extends Thread{
             if(ProxyServer.getCache().get(request.url).stillValid()) {
                 return true;
             } else {
-                /*
                 System.out.println("Clear Cache Data For Request: " + request.url);
                 try {
                     while(!ProxyServer.removeCache(request.url)) {
@@ -173,7 +172,6 @@ public class ProxyThread extends Thread{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                */
                 return false;
             }
         } else {
