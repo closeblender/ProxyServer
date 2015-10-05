@@ -38,10 +38,14 @@
       <file leaf-file-name="ProxyThread.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ProxyThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.03671706">
-              <caret line="27" column="36" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.64794815">
+              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#2693#2694#0" expanded="true" />
+                <element signature="e#2729#2730#0" expanded="true" />
+                <element signature="e#2772#2773#0" expanded="true" />
+                <element signature="e#2817#2818#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -424,12 +428,12 @@
       <created>1444003846331</created>
       <option name="number" value="Default" />
       <updated>1444003846331</updated>
-      <workItem from="1444003850051" duration="1620000" />
+      <workItem from="1444003850051" duration="3447000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1620000" />
+    <option name="totallyTimeSpent" value="3447000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -493,10 +497,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ProxyThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.03671706">
-          <caret line="27" column="36" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.64794815">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2693#2694#0" expanded="true" />
+            <element signature="e#2729#2730#0" expanded="true" />
+            <element signature="e#2772#2773#0" expanded="true" />
+            <element signature="e#2817#2818#0" expanded="true" />
           </folding>
         </state>
       </provider>

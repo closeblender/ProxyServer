@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * Created by closestudios on 10/4/15.
@@ -27,26 +29,50 @@ public class ProxyThread extends Thread{
             OutputStream outToClient = socket.getOutputStream();
             InputStream inFromClient = socket.getInputStream();
 
-            // Get all the bytes from the client
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
             int nRead;
-            byte[] data = new byte[16384];
+            byte[] data = new byte[1024];
 
-            while ((nRead = inFromClient.read(data, 0, data.length)) != -1) {
-                System.out.println("Reading");
-                buffer.write(data, 0, nRead);
-            }
+            System.out.println("Reading Data: " + inFromClient.read(data, 0, data.length));
+            System.out.println("Reading Data2: " + inFromClient.read(data, 0, data.length));
+            System.out.println("Reading Data3: " + inFromClient.read(data, 0, data.length));
+
 
             buffer.flush();
+            byte[] requestFromClient = buffer.toByteArray();
+            System.out.println("Read Data: " + requestFromClient.length);
 
-            byte[] inputFromClient = buffer.toByteArray();
+            /*
 
-            System.out.println("In From Client Size: " + inputFromClient.length);
 
-            String requestFromClient = new String(inputFromClient);
+            // Get Request
+            String inputLine = "";
+            Request request = new Request();
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println("Read: " + inputLine);
+                StringTokenizer tok = new StringTokenizer(inputLine);
 
-            System.out.println("Request: " + requestFromClient);
+                if(tok.nextToken().equals("GET")) {
+                    request.setURL(tok.nextToken());
+                    System.out.println("Found GET");
+                }
+
+            }
+
+            if(request.isValidRequest()) {
+                // Create socket to server
+
+                Socket serverSocket = new Socket(request.getURL,80);
+
+                OutputStream outToServer = serverSocket.getOutputStream();
+                InputStream inFromServer = serverSocket.getInputStream();
+
+                outToServer.write(requestFromClient);
+
+
+            }
+
+*/
 
 
             if (socket != null) {
@@ -54,11 +80,29 @@ public class ProxyThread extends Thread{
             }
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
             e.printStackTrace();
         }
 
     }
 
+    public class Request {
+
+        public String getURL;
+        public HashMap<String, String> headers = new HashMap<>();
+
+        public Request() {
+
+        }
+
+        public void setURL(String url) {
+            getURL = url;
+        }
+
+        public boolean isValidRequest() {
+            return getURL != null;
+        }
+    }
 
 }
