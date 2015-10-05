@@ -27,5 +27,8 @@ local.properties
 *.iws
 .idea/
 
+cache.bytes
+proxy.log
+
 # Meld mergetool files
 *.orig
