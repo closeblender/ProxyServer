@@ -53,7 +53,7 @@ public class ProxyThread extends Thread{
             for(int i = 0;i < lines.length;i++) {
 
                 String inputLine = lines[i];
-                System.out.println("Read: " + inputLine);
+                System.out.println("Read Request Line: " + inputLine);
                 StringTokenizer tok = new StringTokenizer(inputLine);
 
                 if(tok.hasMoreTokens()) {
@@ -85,7 +85,7 @@ public class ProxyThread extends Thread{
 
                 outToServer.write(requestFromClient);
 
-                byte[] dataFrom = new byte[1024];
+                byte[] dataFrom = new byte[10240];
                 int bytes_read;
                 while ((bytes_read = inFromServer.read(dataFrom)) != -1) {
                     System.out.println("Return Data From Server: " + bytes_read);
@@ -93,11 +93,13 @@ public class ProxyThread extends Thread{
                     outToClient.flush();
                 }
 
+                System.out.println("Closing Server Socket");
                 serverSocket.close();
 
             }
 
 
+            System.out.println("Closing Socket");
             if (socket != null) {
                 socket.close();
             }
@@ -107,7 +109,6 @@ public class ProxyThread extends Thread{
             System.out.println("Exception: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     public class Request {
