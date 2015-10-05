@@ -49,7 +49,7 @@ public class ProxyServer {
     }
 
     public static void loadCache() throws IOException, ClassNotFoundException {
-        File file = new File("cache");
+        File file = new File("cache.bytes");
         if(file.exists()) {
             System.out.println("Loaded Cache!");
             FileInputStream f = new FileInputStream(file);

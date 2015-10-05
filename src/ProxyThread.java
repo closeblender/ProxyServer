@@ -98,6 +98,7 @@ public class ProxyThread extends Thread{
                     int bytes_read;
                     while ((bytes_read = inFromServer.read(dataFrom)) != -1) {
                         System.out.println("Return Data From Server: " + bytes_read);
+                        System.out.println("Return String From Server: " + new String(dataFrom));
                         outToClient.write(dataFrom, 0, bytes_read);
                         outToClient.flush();
                         returnDataFromServer.write(dataFrom, 0, bytes_read);
