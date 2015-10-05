@@ -63,6 +63,8 @@ public class ProxyThread extends Thread{
                     if (token != null && token.equals("GET")) {
                         request.setURL(tok.nextToken());
                         System.out.println("Found GET");
+                    } else {
+                        request.setHeaders(token, tok.nextToken());
                     }
                 }
 
@@ -71,11 +73,12 @@ public class ProxyThread extends Thread{
             if(request.isValidRequest()) {
                 // Create socket to server
 
-                InetAddress address = InetAddress.getByName(request.getURL);
+                System.out.println("Host Name: " + request.getURL());
+                InetAddress address = InetAddress.getByName(request.getURL());
                 String ipAddress = address.getHostAddress();
                 System.out.println("IP Address: " + ipAddress);
 
-                Socket serverSocket = new Socket(ipAddress,80);
+                Socket serverSocket = new Socket(address,80);
 
                 OutputStream outToServer = serverSocket.getOutputStream();
                 InputStream inFromServer = serverSocket.getInputStream();
@@ -97,9 +100,11 @@ public class ProxyThread extends Thread{
                 }
 
                 bufferFromServer.flush();
-                byte[] requestFromServer = bufferFromServer.toByteArray();
-                System.out.println("Request Data From Server: " + requestFromServer.length);
+                byte[] returnFromServer = bufferFromServer.toByteArray();
+                System.out.println("Return Data From Server: " + returnFromServer.length);
+                System.out.println("Return String From Server: " + new String(returnFromServer));
 
+                outToClient.write(returnFromServer);
 
             }
 
@@ -118,7 +123,7 @@ public class ProxyThread extends Thread{
 
     public class Request {
 
-        public String getURL;
+        public String URL;
         public HashMap<String, String> headers = new HashMap<>();
 
         public Request() {
@@ -126,11 +131,19 @@ public class ProxyThread extends Thread{
         }
 
         public void setURL(String url) {
-            getURL = url;
+            URL = url;
         }
 
         public boolean isValidRequest() {
-            return getURL != null;
+            return URL != null;
+        }
+
+        public void setHeaders(String key, String data) {
+            headers.put(key, data);
+        }
+
+        public String getURL() {
+            return headers.get("Host:");
         }
     }
 
