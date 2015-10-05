@@ -11,6 +11,7 @@ public class ProxyThread extends Thread{
 
     private Socket socket = null;
     private SocketAddress clientAddress = null;
+    private Socket serverSocket = null;
 
     public ProxyThread(Socket socket, SocketAddress address) {
         super("ProxyThread");
@@ -37,13 +38,13 @@ public class ProxyThread extends Thread{
                 int length = inFromClient.read(data, 0, data.length);
                 if(length != -1) {
                     buffer.write(data, 0, length);
+                    buffer.flush();
                 }
                 if(length == -1 || inFromClient.available() == 0) {
                     dataOver = true;
                 }
             }
 
-            buffer.flush();
             byte[] requestFromClient = buffer.toByteArray();
             String requestFromClientString = new String(requestFromClient);
             System.out.println("Request Data From Client: " + requestFromClientString);
@@ -90,13 +91,16 @@ public class ProxyThread extends Thread{
                     String ipAddress = address.getHostAddress();
                     System.out.println("IP Address: " + ipAddress);
 
-                    Socket serverSocket = new Socket(address, 80);
+                    serverSocket = new Socket(address, 80);
 
                     OutputStream outToServer = serverSocket.getOutputStream();
                     InputStream inFromServer = serverSocket.getInputStream();
 
-                    outToServer.write(requestFromClient);
+                    String messageOut = "GET " + request.url + " HTTP/1.0\r\n\r\n";
 
+                    System.out.println("Send Request To Server: " + messageOut);
+
+                    outToServer.write(messageOut.getBytes());
 
                     ByteArrayOutputStream returnDataFromServer = new ByteArrayOutputStream();
                     byte[] dataFrom = new byte[10240];
@@ -132,6 +136,14 @@ public class ProxyThread extends Thread{
         } catch (Exception e) {
             System.out.println("Exception Here: " + e.getMessage());
             e.printStackTrace();
+            try {
+                socket.close();
+                serverSocket.close();
+            } catch (IOException exception) {
+                System.out.println("Exception: " + exception.getMessage());
+                exception.printStackTrace();
+            }
+
         }
     }
 
@@ -154,6 +166,7 @@ public class ProxyThread extends Thread{
             if(ProxyServer.getCache().get(request.url).stillValid()) {
                 return true;
             } else {
+                /*
                 System.out.println("Clear Cache Data For Request: " + request.url);
                 try {
                     while(!ProxyServer.removeCache(request.url)) {
@@ -163,6 +176,7 @@ public class ProxyThread extends Thread{
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                */
                 return false;
             }
         } else {
@@ -197,6 +211,12 @@ public class ProxyThread extends Thread{
 
         public String getURL() throws MalformedURLException {
             return new URL(url).getHost();
+        }
+
+        public String getPage() throws MalformedURLException {
+            int indexOf = url.indexOf(getURL()) + getURL().length();
+            System.out.println("Index Start: " + indexOf);
+            return url.substring(indexOf);
         }
     }
 

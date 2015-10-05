@@ -32,3 +32,5 @@ proxy.log
 
 # Meld mergetool files
 *.orig
+
+workplace.xml

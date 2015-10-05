@@ -12,7 +12,7 @@ public class ProxyServer {
 
     static HashMap<String, CachedData> cache;
     static boolean cacheLock = false;
-    static long CACHE_SEC_LIMIT = 60000;
+    static long CACHE_SEC_LIMIT = -10;
     static boolean logLock = false;
 
     public static void main(String[] args) throws IOException {
@@ -30,7 +30,7 @@ public class ProxyServer {
         try { // Try to get args
             port = Integer.parseInt(args[0]);
         } catch (Exception e) {
-
+            //use default
         }
 
         try {
