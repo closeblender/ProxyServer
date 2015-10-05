@@ -12,7 +12,7 @@ public class ProxyServer {
 
     static HashMap<String, CachedData> cache;
     static boolean cacheLock = false;
-    static long CACHE_SEC_LIMIT = -10;
+    static long CACHE_SEC_LIMIT = 60000;
     static boolean logLock = false;
 
     public static void main(String[] args) throws IOException {
