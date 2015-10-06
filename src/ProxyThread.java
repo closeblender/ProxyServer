@@ -100,7 +100,13 @@ public class ProxyThread extends Thread{
 
                     System.out.println("Send Request To Server: " + messageOut);
 
-                    outToServer.write(messageOut.getBytes());
+                    if(request.headers.keySet().size() == 0) {
+                        System.out.println("Use Message");
+                        outToServer.write(messageOut.getBytes());
+                    } else {
+                        System.out.println("Use Request");
+                        outToServer.write(requestFromClient);
+                    }
 
                     ByteArrayOutputStream returnDataFromServer = new ByteArrayOutputStream();
                     byte[] dataFrom = new byte[10240];
